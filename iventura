@@ -1,0 +1,28 @@
+pipeline
+{
+    agent any
+stages
+{
+    stage('Cloning git repository')
+    {
+        steps
+        {
+        git url: 'https://github.com/Ajay2307/dash_python.git'
+        }
+    }
+    stage('Trigger openshift build') 
+    {
+    steps {
+            script {
+                     openshift.withCluster() 
+                     {
+                       openshift.withProject("jenkins") 
+                       {
+                         openshift.selector("bc", "sentiment").startBuild()
+                       }
+                     }
+                   }
+                 }
+    }
+}
+}
